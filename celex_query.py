@@ -1,6 +1,6 @@
 import csv
-import json
 import get_structure as gs
+from pathlib import Path
 
 
 def build_url(celex: str) -> str:
@@ -19,22 +19,36 @@ def get_articles(body: dict) -> str:
         return results
 
 
-parsed = 0
+parsed_documents = 0
 failed = 0
+parsed_articles = 0
+limit_articles = 90
+stop_execution = False
+
 with open('./input/data.csv') as input:
     results = []
     reader = csv.DictReader(input)
     for row in reader:
+        if stop_execution:
+            break
+        print(parsed_documents, parsed_articles)
         try:
             builder = gs.Html2Json()
             url = build_url(row['celex'])
             doc = builder.convert_from_url(url)
+            parsed_documents += 1
             articles = get_articles(doc['document'][2]['body'][0])
             for index, article in enumerate(articles):
-                with open("./output/{}_{}".format(row['celex'], index + 1), "w+") as output:
-                    output.write(json.dumps(article))
-                    parsed += 1
+                file = Path(
+                    "./output/{}/{}.txt".format(index + 1, row['celex']))
+                file.parent.mkdir(parents=True, exist_ok=True)
+                file.write_text(article['full_text'])
+                parsed_articles += 1
+                if parsed_articles == limit_articles:
+                    stop_execution = True
+                    break
         except:
             failed += 1
 
-print("Parsed: {}, Failed: {}".format(parsed, failed))
+print("Parsed Documents: {}, Failed: {}, Parsed Articles: {}".format(
+    parsed_documents, failed, parsed_articles))
