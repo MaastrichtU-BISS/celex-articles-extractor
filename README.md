@@ -2,7 +2,7 @@
 Scrapes eur-lex.europa.eu and parses the documents to segmentate them into articles.
 
 # Input
-In the input folder, place a csv file with at least one colummn called "celex".
+In the input folder, place a csv file with at least one column called "celex".
 
 # Execute
 Run celex_query.py using Python3
