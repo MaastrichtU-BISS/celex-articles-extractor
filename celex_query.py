@@ -1,10 +1,12 @@
 import csv
-import get_structure as gs
 from pathlib import Path
+
+import get_structure as gs
 
 
 def build_url(celex: str) -> str:
-    return "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:{}".format(celex)
+    return "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:{}".format(
+        celex)
 
 
 def get_articles(body: dict) -> str:
@@ -47,7 +49,8 @@ with open('./input/data.csv') as input:
                 if parsed_articles == limit_articles:
                     stop_execution = True
                     break
-        except:
+        except Exception:
+            print(f"Failed to parse document: {row['celex']}")
             failed += 1
 
 print("Parsed Documents: {}, Failed: {}, Parsed Articles: {}".format(
