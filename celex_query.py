@@ -24,10 +24,10 @@ def get_articles(body: dict) -> str:
 parsed_documents = 0
 failed = 0
 parsed_articles = 0
-limit_articles = 90
+limit_articles = 200
 stop_execution = False
 
-with open('./input/data.csv') as input:
+with open('./input/data_latest.csv') as input:
     results = []
     reader = csv.DictReader(input)
     for row in reader:
@@ -41,14 +41,16 @@ with open('./input/data.csv') as input:
             parsed_documents += 1
             articles = get_articles(doc['document'][2]['body'][0])
             for index, article in enumerate(articles):
-                file = Path(
-                    "./output/{}/{}.txt".format(index + 1, row['celex']))
-                file.parent.mkdir(parents=True, exist_ok=True)
-                file.write_text(article['full_text'])
-                parsed_articles += 1
-                if parsed_articles == limit_articles:
-                    stop_execution = True
-                    break
+                if index + 1 > 4:
+                    filename_ = row['celex'] + "_Article_" + str(index + 1)
+                    file = Path(
+                        "./output/{}/{}.txt".format(index + 1, filename_)) 
+                    file.parent.mkdir(parents=True, exist_ok=True)
+                    file.write_text(article['full_text'])
+                    parsed_articles += 1
+                    if parsed_articles == limit_articles:
+                        stop_execution = True
+                        break
         except Exception:
             print(f"Failed to parse document: {row['celex']}")
             failed += 1
