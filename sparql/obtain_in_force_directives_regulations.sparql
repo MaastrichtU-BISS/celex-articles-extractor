@@ -1,0 +1,26 @@
+PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>
+PREFIX annot: <http://publications.europa.eu/ontology/annotation#>
+PREFIX skos:<http://www.w3.org/2004/02/skos/core#>
+PREFIX dc:<http://purl.org/dc/elements/1.1/>
+PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl:<http://www.w3.org/2002/07/owl#>
+select distinct ?work ?type ?celex ?date
+where{ ?work cdm:work_has_resource-type ?type.
+
+  FILTER(
+    (?type=<http://publications.europa.eu/resource/authority/resource-type/DIR>||
+    ?type=<http://publications.europa.eu/resource/authority/resource-type/DIR_IMPL>||
+    ?type=<http://publications.europa.eu/resource/authority/resource-type/DIR_DEL> ||
+    ?type=<http://publications.europa.eu/resource/authority/resource-type/REG>||
+    ?type=<http://publications.europa.eu/resource/authority/resource-type/REG_IMPL>||
+    ?type=<http://publications.europa.eu/resource/authority/resource-type/REG_FINANC>||
+    ?type=<http://publications.europa.eu/resource/authority/resource-type/REG_DEL>)
+  )
+OPTIONAL{?work cdm:resource_legal_id_celex ?celex;
+cdm:resource_legal_in-force ?inForce.
+FILTER(str(?inForce)="true")}
+OPTIONAL{?work cdm:work_date_document ?date.}
+}
+limit 1000
+offset 0
