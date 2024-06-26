@@ -237,8 +237,10 @@ class Html2Json:
                 self.get_paragraphs(s, stack, res)
 
             if current.find_next_sibling() == None:
-                potential_art = current.parent.find_next_sibling().find(
-                    attrs={'class': self.get_field('ti-art')})
+                potential_art = None
+                if current.parent.find_next_sibling() != None:
+                    potential_art = current.parent.find_next_sibling().find(
+                        attrs={'class': self.get_field('ti-art')})
                 if potential_art != None:
                     current = potential_art
                 else:

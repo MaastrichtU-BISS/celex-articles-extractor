@@ -30,7 +30,7 @@ limit_articles = 200
 stop_execution = False
 output_path = ""
 
-with open('./input/data_10000.csv', mode='r') as f:
+with open('./input/data.csv', mode='r') as f:
     results = []
     reader = csv.DictReader(f)
     row_count = 0
